@@ -56,11 +56,7 @@ def main(x, y):
     m2 = run_random_forest_split(x, y)
     r = generating_random_conf.compound()
     descriptive_stats.print_conf_stats({'bases': [r], 'text':['generated']})
-    print(x.columns)
-    print(r.columns)
-    # print(r[x.columns.tolist()])
-    # y2 = predict_random_forest_cross(m2, r[x.columns.tolist()])
-    # descriptive_stats.print_conf_stats({'bases': [y2], 'text': ['sim2']})
+    y2 = predict_random_forest_cross(m2, r[x.columns.tolist()])
 
 
 if __name__ == "__main__":

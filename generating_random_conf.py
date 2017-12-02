@@ -31,7 +31,7 @@ def generate(i=0):
         data[each] = random.choice(['True', 'False'])
     for each in d_perc:
         data[each] = round(random.random(), 2)
-    data['PROCESSSING_ACPS'] = random.choice(d_acps)
+    data['PROCESSING_ACPS'] = random.choice(d_acps)
     return pd.DataFrame(data, index=[i])
 
 
