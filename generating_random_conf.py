@@ -1,5 +1,8 @@
 import random
+
 import pandas as pd
+
+import preparing_data
 
 d_uniform = {"HOUSE_VACANCY": [0.02, 0.4], "MARKUP": [0, .5], "MEMBERS_PER_FAMILY": [1, 5],
              "PRODUCTION_MAGNITUDE": [1, 200], "SIZE_MARKET": [5, 50]}
@@ -29,10 +32,11 @@ def generate(i=0):
     for each in d_perc:
         data[each] = round(random.random(), 2)
     data['PROCESSSING_ACPS'] = random.choice(d_acps)
-    return pd.DataFrame(data, index=[i])
+    data = pd.DataFrame(data, index=[i])
+    return preparing_data.dummies(data)
 
 
-def compound(n=10, df=pd.DataFrame()):
+def compound(n=250, df=pd.DataFrame()):
     for i in range(n):
         df = pd.concat([df, generate(i)])
     return df

@@ -3,7 +3,6 @@ import pickle
 
 from numpy import set_printoptions
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import cross_val_score
 from sklearn.utils import shuffle
 
@@ -36,6 +35,7 @@ def run_random_forest_cross(x, y):
     print('All accuracies RF Automatic')
     print(accuracies)
     print('Average accuracy Random Forest Automatic resampling {:.4f}'.format(sum(accuracies)/len(accuracies)))
+    return m1
 
 
 def run_random_forest_split(x, y):
@@ -43,40 +43,28 @@ def run_random_forest_split(x, y):
     train_size = int(len(x) * .67)
     m1.fit(x[train_size:], y['target'][train_size:])
     accuracy = m1.score(x[:train_size:], y['target'][:train_size])
-    yhat = m1.predict(x[train_size:])
-    cm = confusion_matrix(y[train_size:], yhat)
     print('Accuracy Random Forest Manual data-splitting {:.4f}'.format(accuracy))
-    print('Confusion matrix for RF Manual')
-    print(cm)
-    print('Features importance: ')
-    print('')
-    out = dict()
-    for i in range(len(m1.feature_importances_)):
-        if m1.feature_importances_.item(i) > 0:
-            out[x.columns[i]] = m1.feature_importances_.item(i)
-    for w in sorted(out, key=out.get, reverse=True):
-        print('{}: {:.4f}'.format(w, out[w]))
     return m1
 
 
-def predict_random_forest_cross(a, b):
-    return 1, 2
+def predict_random_forest_cross(model, data):
+    return model.predict(data)
 
 
 def main(x, y):
     descriptive_stats.print_conf_stats({'bases': [x], 'text':['actual']})
-    run_random_forest_cross(x, y)
-    model = run_random_forest_split(x, y)
-    r = generating_random_conf.generate()
-    s1, s0 = predict_random_forest_cross(r, model)
-    descriptive_stats.print_conf_stats({'bases': [s1, s0], 'text': ['sim1', 'sim2']})
+    m2 = run_random_forest_split(x, y)
+    r = generating_random_conf.compound()
+    descriptive_stats.print_conf_stats({'bases': [r], 'text':['generated']})
+    y2 = predict_random_forest_cross(m2, r)
+    descriptive_stats.print_conf_stats({'bases': [y2], 'text': ['sim2']})
 
 
 if __name__ == "__main__":
     cols_names = ['months', 'price_index', 'gdp_index', 'gdp_growth', 'unemployment', 'average_workers',
                   'families_wealth', 'families_savings', 'firms_wealth', 'firms_profit', 'gini_index',
                   'average_utility', 'inflation', 'average_qli']
-    path = r'\\storage4\carga\MODELO DINAMICO DE SIMULACAO\Exits_python\JULY\SENSItivity\distributions'
+    path = r'\\storage4\carga\MODELO DINAMICO DE SIMULACAO\Exits_python\JULY\SENSItivity'
     target1 = 'gdp_index'
     target2 = 'gini_index'
     a, b = get_data(path, target1, target2)
