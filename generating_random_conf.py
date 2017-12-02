@@ -35,7 +35,7 @@ def generate(i=0):
     return pd.DataFrame(data, index=[i])
 
 
-def compound(n=500, df=pd.DataFrame()):
+def compound(n=10000, df=pd.DataFrame()):
     for i in range(n):
         df = pd.concat([df, generate(i)])
     df = df.fillna(0)
