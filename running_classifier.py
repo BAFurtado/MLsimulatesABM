@@ -15,7 +15,7 @@ set_printoptions(precision=4)
 
 
 def get_data(pathways, col1, col2):
-    name = pathways[-4:]
+    name = 'pre_processed_data\\' + pathways[-4:]
     if os.path.exists(name):
         with open(name, 'rb') as stored_data:
             p = pickle.load(stored_data)
@@ -64,21 +64,20 @@ def predict_random_forest_cross(a, b):
 
 
 def main(x, y):
-    descriptive_stats.print_conf_stats(x, 'actual')
+    descriptive_stats.print_conf_stats({'bases': [x], 'text':['actual']})
     run_random_forest_cross(x, y)
     model = run_random_forest_split(x, y)
     r = generating_random_conf.generate()
     s1, s0 = predict_random_forest_cross(r, model)
-    descriptive_stats.print_conf_stats(s1, s0, 'simulated')
+    descriptive_stats.print_conf_stats({'bases': [s1, s0], 'text': ['sim1', 'sim2']})
 
 
 if __name__ == "__main__":
     cols_names = ['months', 'price_index', 'gdp_index', 'gdp_growth', 'unemployment', 'average_workers',
                   'families_wealth', 'families_savings', 'firms_wealth', 'firms_profit', 'gini_index',
                   'average_utility', 'inflation', 'average_qli']
-    path = r'\\storage4\carga\MODELO DINAMICO DE SIMULACAO\Exits_python\JULY\sensitivity'
+    path = r'\\storage4\carga\MODELO DINAMICO DE SIMULACAO\Exits_python\JULY\SENSItivity\distributions'
     target1 = 'gdp_index'
     target2 = 'gini_index'
     a, b = get_data(path, target1, target2)
-
     main(a, b)
