@@ -56,13 +56,16 @@ def separate_results(conf, y):
     res = pd.concat([conf, y], axis=1)
     r1 = res[res['t2'] == 1]
     r2 = res[res['t2'] == 0]
+    print('Final results: \n')
     descriptive_stats.print_conf_stats({'bases': [r1, r2], 'text': ['best', 'nonbest']})
 
 
 def main(x, y):
+    print('\n Training dataset summary: \n')
     descriptive_stats.print_conf_stats({'bases': [x], 'text': ['actual']})
     m2 = run_random_forest_split(x, y)
     r = generating_random_conf.compound()
+    print('Generated dataset summary')
     descriptive_stats.print_conf_stats({'bases': [r], 'text':['generated']})
     y2 = predict_random_forest_cross(m2, r[x.columns.tolist()])
     y2 = pd.DataFrame({'t2': y2.tolist()})
