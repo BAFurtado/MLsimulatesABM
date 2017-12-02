@@ -21,7 +21,7 @@ def read_json(p):
 def json_to_dict(df):
     # Transforms JSON data into DataFrame, removing unchanging columns
     t = pd.DataFrame.from_dict(df, orient='index').drop(labels='RUN', axis=0).dropna(axis=1)
-    t = t.drop(['LIST_NEW_AGE_GROUPS', 'TAXES_STRUCTURE'], axis=1)
+    t = t.drop(['LIST_NEW_AGE_GROUPS', 'TAXES_STRUCTURE', 'SIMPLIFY_POP_EVOLUTION'], axis=1)
     try:
         t = t.drop(['PROCESSING_STATES', 'HIRING_SAMPLE_SIZE'], axis=1)
     except ValueError:
@@ -98,7 +98,7 @@ def main(pathway, selected_col1, selected_col2):
 
 
 if __name__ == "__main__":
-    path = r'\\storage4\carga\MODELO DINAMICO DE SIMULACAO\Exits_python\JULY'
+    path = r'\\storage4\carga\MODELO DINAMICO DE SIMULACAO\Exits_python\JULY\sensitivity'
     target1 = 'gdp_index'
     target2 = 'gini_index'
     main(path, target1, target2)
