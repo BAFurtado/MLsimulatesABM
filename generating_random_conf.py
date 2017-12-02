@@ -32,16 +32,16 @@ def generate(i=0):
     for each in d_perc:
         data[each] = round(random.random(), 2)
     data['PROCESSSING_ACPS'] = random.choice(d_acps)
-    data = pd.DataFrame(data, index=[i])
-    return preparing_data.dummies(data)
+    return pd.DataFrame(data, index=[i])
 
 
 def compound(n=250, df=pd.DataFrame()):
     for i in range(n):
         df = pd.concat([df, generate(i)])
-    return df
+    df = df.fillna(0)
+    return preparing_data.dummies(df)
 
 
 if __name__ == '__main__':
     d = compound()
-    print(d.describe())
+    print(d.columns)

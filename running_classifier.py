@@ -52,11 +52,11 @@ def predict_random_forest_cross(model, data):
 
 
 def main(x, y):
-    descriptive_stats.print_conf_stats({'bases': [x], 'text':['actual']})
+    descriptive_stats.print_conf_stats({'bases': [x], 'text': ['actual']})
     m2 = run_random_forest_split(x, y)
     r = generating_random_conf.compound()
     descriptive_stats.print_conf_stats({'bases': [r], 'text':['generated']})
-    y2 = predict_random_forest_cross(m2, r)
+    y2 = predict_random_forest_cross(m2, r[x.columns.tolist()])
     descriptive_stats.print_conf_stats({'bases': [y2], 'text': ['sim2']})
 
 
@@ -64,7 +64,7 @@ if __name__ == "__main__":
     cols_names = ['months', 'price_index', 'gdp_index', 'gdp_growth', 'unemployment', 'average_workers',
                   'families_wealth', 'families_savings', 'firms_wealth', 'firms_profit', 'gini_index',
                   'average_utility', 'inflation', 'average_qli']
-    path = r'\\storage4\carga\MODELO DINAMICO DE SIMULACAO\Exits_python\JULY\SENSItivity'
+    path = r'\\storage4\carga\MODELO DINAMICO DE SIMULACAO\Exits_python\JULY\SENSItivity\distributions'
     target1 = 'gdp_index'
     target2 = 'gini_index'
     a, b = get_data(path, target1, target2)
