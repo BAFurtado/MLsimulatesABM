@@ -4,13 +4,14 @@ import pandas as pd
 
 import preparing_data
 
-d_uniform = {"HOUSE_VACANCY": [0.02, 0.4], "MARKUP": [0, .5], "MEMBERS_PER_FAMILY": [1, 5],
-             "PRODUCTION_MAGNITUDE": [1, 200], "SIZE_MARKET": [5, 50], "PERCENTAGE_CHECK_NEW_LOCATION": [.01, .3]}
+d_uniform = {"HOUSE_VACANCY": [0.02, 0.2], "MARKUP": [0, .4], "MEMBERS_PER_FAMILY": [1, 5],
+             "PERCENTAGE_ACTUAL_POP": [.01, .4],
+             "PRODUCTION_MAGNITUDE": [1, 160], "SIZE_MARKET": [5, 30], "PERCENTAGE_CHECK_NEW_LOCATION": [.01, .25]}
 d_taxes = {"TAX_CONSUMPTION": [.004, .00004], "TAX_ESTATE_TRANSACTION": [7e-06, 7e-08],
            "TAX_FIRM": [.004, .00004], "TAX_LABOR": [.0015, .000015], "TAX_PROPERTY": [4e-06, 4e-08],
-           "TREASURE_INTO_SERVICES": [.8, 1.2]}
+           "TREASURE_INTO_SERVICES": [.1, 1.1]}
 d_bool = ["ALTERNATIVE0", "FPM_DISTRIBUTION", "WAGE_IGNORE_UNEMPLOYMENT"]
-d_perc = ["ALPHA", "BETA", "LABOR_MARKET", "PCT_DISTANCE_HIRING", "PERCENTAGE_ACTUAL_POP", "STICKY_PRICES"]
+d_perc = ["ALPHA", "BETA", "LABOR_MARKET", "PCT_DISTANCE_HIRING", "STICKY_PRICES"]
 d_acps = ['ARACAJU', 'BELEM', 'BELO HORIZONTE', 'BRASILIA', 'CAMPINA GRANDE', 'CAMPINAS', 'CAMPO GRANDE',
           'CAMPOS DOS GOYTACAZES', 'CAXIAS DO SUL', 'CUIABA', 'CURITIBA', 'LONDRINA', 'FEIRA DE SANTANA',
           'FLORIANOPOLIS', 'FORTALEZA', 'GOIANIA', 'ILHEUS - ITABUNA', 'IPATINGA', 'JOAO PESSOA', 'JOINVILLE',
@@ -35,7 +36,7 @@ def generate(i=0):
     return pd.DataFrame(data, index=[i])
 
 
-def compound(n=10000, df=pd.DataFrame()):
+def compound(n=2000, df=pd.DataFrame()):
     for i in range(n):
         df = pd.concat([df, generate(i)])
     df = df.fillna(0)

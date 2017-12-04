@@ -53,7 +53,7 @@ def selecting_y(df, col):
     return df[df['months'] == 239][col]
 
 
-def customizing_target(base, percentile=80, op=operator.gt):
+def customizing_target(base, percentile=70, op=operator.gt):
     # Discretizes results for a given percentile and a given operator (greater than or less than)
     return pd.DataFrame({'target': [1 if op.__call__(x, np.percentile(base, percentile)) else 0 for x in base]})
 
@@ -91,7 +91,7 @@ def main(pathway, selected_col1, selected_col2):
     file_list = read_conf_files(pathway)
     data_x, data_y = process_each_file(file_list, cols_names)
     first_col = customizing_target(selecting_y(data_y, selected_col1))
-    second_col = customizing_target(selecting_y(data_y, selected_col2), 20, operator.lt)
+    second_col = customizing_target(selecting_y(data_y, selected_col2), 30, operator.lt)
     data_y = averaging_targets(first_col, second_col)
     data_x = dummies(data_x)
     return data_x, data_y

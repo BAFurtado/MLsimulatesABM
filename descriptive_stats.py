@@ -9,4 +9,4 @@ def print_conf_stats(kwargs):
         print(df.head())
         name = 'outputs\\' + kwargs['text'][i] + '.csv'
         with open(name, 'wb'):
-            df.to_csv(name, sep=';')
+            df.to_csv(name, sep=';', float_format='%.6f')
