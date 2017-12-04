@@ -18,13 +18,13 @@ def get_data(pathways, col1, col2):
         with open(name, 'rb') as stored_data:
             p = pickle.load(stored_data)
             print('Loaded!')
-        return p[0], p[1]
+        return p[0], p[1]['target']
     else:
         x, y = preparing_data.main(pathways, col1, col2)
         with open(name, 'wb') as stored_data:
             pickle.dump([x, y], stored_data)
             print('Saved!')
-        return x, y
+        return x, y['target']
 
 
 def print_results(conf, y):
@@ -36,14 +36,27 @@ def print_results(conf, y):
 
 
 def main(x, y):
+    # Output basic descriptive stats for original dataset
     print('\n Training dataset summary: \n')
     descriptive_stats.print_conf_stats({'bases': [x], 'text': ['actual']})
+
+    # Running model
     m2 = machines.run_random_forest_split(x, y)
+
+    # Generating random configuration data to test against optimal results
     r = generating_random_conf.compound()
     print('Generated dataset summary')
-    descriptive_stats.print_conf_stats({'bases': [r], 'text':['generated']})
-    y2 = machines.predict_random_forest_cross(m2, r[x.columns.tolist()])
+
+    # Output of descriptive stats for random configuration data
+    descriptive_stats.print_conf_stats({'bases': [r], 'text': ['generated']})
+
+    # Predicting results using machine on generated set of random parameters
+    y2 = machines.predict(m2, r[x.columns.tolist()])
+
+    # Transforming array into DataFrame
     y2 = pd.DataFrame({'t2': y2.tolist()})
+
+    # Output results of machine on random data
     print_results(r, y2)
 
 
