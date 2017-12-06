@@ -25,22 +25,7 @@ def get_data(pathways, col1, col2):
     return train_test_split(x, y['target'], test_size=0.2, random_state=10)
 
 
-def print_results(x, y, x_r, y_r):
-    res = pd.concat([x, y], axis=1)
-    res = res.groupby(by=['target']).agg('mean')
-    res_r = pd.concat([x_r, y_r], axis=1)
-    res_r = res_r.groupby(by=['t2']).agg('mean')
-
-    final = pd.concat([res, res_r], axis=0)
-    final.T.to_csv('outputs\\comparison.csv', sep=';')
-    print('\n Final results: \n')
-    print(final)
-
-
 def main(x, xt, y, yt):
-    # Output basic descriptive stats for original dataset
-    print('\n Training dataset summary: \n')
-    descriptive_stats.print_conf_stats({'bases': [pd.concat([x, xt], axis=0)], 'text': ['actual']})
 
     # Running model
     m2 = machines.run_random_forest_split(x, xt, y, yt)
@@ -49,17 +34,14 @@ def main(x, xt, y, yt):
     r = generating_random_conf.compound()
     print('Generated dataset summary')
 
-    # Output of descriptive stats for random configuration data
-    descriptive_stats.print_conf_stats({'bases': [r], 'text': ['generated']})
-
     # Predicting results using machine on generated set of random parameters
     y2 = machines.predict(m2, r[x.columns.tolist()])
+    y2 = pd.DataFrame({'name_model': y2.tolist()})
 
-    # Transforming array into DataFrame
-    y2 = pd.DataFrame({'t2': y2.tolist()})
-
-    # Output results of machine on random data
-    print_results(pd.concat([x, xt], axis=0), pd.concat([y, yt], axis=0), r, y2)
+    # Output basic descriptive stats
+    # Sending over X and Y as lists in a dictionary for actual and each model
+    descriptive_stats.print_conf_stats({'actual': [pd.concat([x, xt], axis=0), pd.concat([y, yt], axis=0)],
+                                        'random_forest': [r, y2]})
 
 
 if __name__ == "__main__":
