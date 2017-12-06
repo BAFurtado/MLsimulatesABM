@@ -6,7 +6,7 @@ def print_conf_stats(kwargs):
     # Dict contains X and Y as lists in a dictionary for actual and each model
     name = 'outputs\\output.csv'
     df = pd.DataFrame()
-    for i, key in enumerate(kwargs.keys()):
+    for key in kwargs.keys():
         temp1 = pd.concat([kwargs[key][0], kwargs[key][1]], axis=1)
         temp1.rename(columns={temp1.columns[-1]: key}, inplace=True)
         temp2 = kwargs[key][0].mean(axis=0)

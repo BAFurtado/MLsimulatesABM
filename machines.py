@@ -1,6 +1,4 @@
-""" def 'run_classifer' code adapted from
-http://scikit-learn.org/stable/auto_examples/ensemble/plot_voting_decision_regions.html
-# sphx-glr-auto-examples-ensemble-plot-voting-decision-regions-py
+""" Experimenting with some models
 """
 
 from sklearn.ensemble import RandomForestClassifier
@@ -14,6 +12,7 @@ from sklearn.utils import shuffle
 
 # Training classifiers (see note above)
 def run_classifiers(x, xt, y, yt):
+
     models = ['Tree', 'KNeighbors', 'SVC', 'MPL', 'Voting']
 
     m1 = DecisionTreeClassifier(max_depth=7)
@@ -22,16 +21,20 @@ def run_classifiers(x, xt, y, yt):
     m4 = MLPClassifier(solver='lbfgs', early_stopping=True, activation='tanh')
     voting = VotingClassifier(estimators=[('dt', m1), ('knn', m2), ('svc', m3), ('neural', m4)],
                               voting='soft')
-    m1.fit(x, y)
-    m2.fit(x, y)
-    m3.fit(x, y)
-    m4.fit(x, y)
-    voting.fit(x, y)
 
+    # Fitting models
     cls = [m1, m2, m3, m4, voting]
-    for i in range(len(cls)):
-        print('Score {}: {:.4f}'.format(models[i], cls[i].score(xt, yt)))
-    return m1, m2, m3, m4, voting
+    for each in cls:
+        each.fit(x, y)
+
+    models = dict(zip(models, cls))
+
+    # Calculating accuracies and printing
+    for key in models.keys():
+        print('Score {}: {:.4f}.'.format(key, models[key].score(xt, yt)))
+
+    # Returns a dictionary of models' names and the model itself
+    return models
 
 
 def run_random_forest_split(x, xt, y, yt):
@@ -47,10 +50,14 @@ def predict(model, data):
     return model.predict(data)
 
 
+def fit(model, a, b):
+    model.fit(a, b)
+
+
 if __name__ == "__main__":
     import main
     path = r'\\storage4\carga\MODELO DINAMICO DE SIMULACAO\Exits_python\JULY'
     target1 = 'gdp_index'
     target2 = 'gini_index'
-    x, xt, y, yt = main.get_data(path, target1, target2)
-    c, d, e, f, g = run_classifiers(x, xt, y, yt)
+    X, XT, Y, YT = main.get_data(path, target1, target2)
+    c, d, e, f, g = run_classifiers(X, XT, Y, YT)

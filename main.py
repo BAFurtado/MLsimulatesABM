@@ -28,20 +28,25 @@ def get_data(pathways, col1, col2):
 def main(x, xt, y, yt):
 
     # Running model
-    m2 = machines.run_random_forest_split(x, xt, y, yt)
+    models = machines.run_classifiers(x, xt, y, yt)
 
     # Generating random configuration data to test against optimal results
     r = generating_random_conf.compound()
     print('Generated dataset summary')
 
     # Predicting results using machine on generated set of random parameters
-    y2 = machines.predict(m2, r[x.columns.tolist()])
-    y2 = pd.DataFrame({'name_model': y2.tolist()})
+    results = dict()
+    for key in models.keys():
+        yr = machines.predict(models[key], r[x.columns.tolist()])
+        print('Sum of ones {}: {}'.format(key, yr.sum()))
+        yr = pd.DataFrame({key: yr.tolist()})
+        results[key] = [r, yr]
 
     # Output basic descriptive stats
     # Sending over X and Y as lists in a dictionary for actual and each model
-    descriptive_stats.print_conf_stats({'actual': [pd.concat([x, xt], axis=0), pd.concat([y, yt], axis=0)],
-                                        'random_forest': [r, y2]})
+    actual = {'actual': [pd.concat([x, xt], axis=0), pd.concat([y, yt], axis=0)]}
+    actual.update(results)
+    descriptive_stats.print_conf_stats(actual)
 
 
 if __name__ == "__main__":
