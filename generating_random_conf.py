@@ -1,17 +1,17 @@
-import random
-
+import numpy.random
 import pandas as pd
 
 import preparing_data
 
-d_uniform = {"HOUSE_VACANCY": [0.02, 0.2], "MARKUP": [0, .4], "MEMBERS_PER_FAMILY": [1, 5],
-             "PERCENTAGE_ACTUAL_POP": [.01, .4],
-             "PRODUCTION_MAGNITUDE": [1, 160], "SIZE_MARKET": [5, 30], "PERCENTAGE_CHECK_NEW_LOCATION": [.01, .25]}
-d_taxes = {"TAX_CONSUMPTION": [.004, .00004], "TAX_ESTATE_TRANSACTION": [7e-06, 7e-08],
-           "TAX_FIRM": [.004, .00004], "TAX_LABOR": [.0015, .000015], "TAX_PROPERTY": [4e-06, 4e-08],
-           "TREASURE_INTO_SERVICES": [.1, 1.1]}
+numpy.random.seed(0)
+
 d_bool = ["ALTERNATIVE0", "FPM_DISTRIBUTION", "WAGE_IGNORE_UNEMPLOYMENT"]
-d_perc = ["ALPHA", "BETA", "LABOR_MARKET", "PCT_DISTANCE_HIRING", "STICKY_PRICES"]
+
+d_normal = ["HOUSE_VACANCY", "MARKUP", "MEMBERS_PER_FAMILY", "PERCENTAGE_ACTUAL_POP", "PRODUCTION_MAGNITUDE",
+            "SIZE_MARKET", "PERCENTAGE_CHECK_NEW_LOCATION", "TAX_CONSUMPTION", "TAX_ESTATE_TRANSACTION",
+            "TAX_FIRM", "TAX_LABOR", "TAX_PROPERTY", "TREASURE_INTO_SERVICES", "ALPHA", "BETA", "LABOR_MARKET",
+            "PCT_DISTANCE_HIRING", "STICKY_PRICES"]
+
 d_acps = ['ARACAJU', 'BELEM', 'BELO HORIZONTE', 'BRASILIA', 'CAMPINA GRANDE', 'CAMPINAS', 'CAMPO GRANDE',
           'CAMPOS DOS GOYTACAZES', 'CAXIAS DO SUL', 'CUIABA', 'CURITIBA', 'LONDRINA', 'FEIRA DE SANTANA',
           'FLORIANOPOLIS', 'FORTALEZA', 'GOIANIA', 'ILHEUS - ITABUNA', 'IPATINGA', 'JOAO PESSOA', 'JOINVILLE',
@@ -22,27 +22,30 @@ d_acps = ['ARACAJU', 'BELEM', 'BELO HORIZONTE', 'BRASILIA', 'CAMPINA GRANDE', 'C
           'VOLTA REDONDA - BARRA MANSA']
 
 
-def generate(i=0):
+def pre_process(name):
+    t = pd.read_csv(name, sep=';')
+    return t.describe().T[['mean', 'std']]
+
+
+def compound(name, n=1000):
+    samples = pre_process(name)
     data = dict()
-    for key in d_uniform.keys():
-        data[key] = round(random.uniform(d_uniform[key][0], d_uniform[key][1]), 2)
-    for key in d_taxes.keys():
-        data[key] = round(random.uniform(d_taxes[key][0], d_taxes[key][1]), 8)
+    for each in d_normal:
+        data[each] = numpy.random.normal(samples.loc[each, 'mean'], samples.loc[each, 'std'], n)
+    data['PROCESSING_ACPS'] = numpy.random.choice(d_acps, n)
     for each in d_bool:
-        data[each] = random.choice(['True', 'False'])
-    for each in d_perc:
-        data[each] = round(random.random(), 2)
-    data['PROCESSING_ACPS'] = random.choice(d_acps)
-    return pd.DataFrame(data, index=[i])
-
-
-def compound(n=2000, df=pd.DataFrame()):
-    for i in range(n):
-        df = pd.concat([df, generate(i)])
-    df = df.fillna(0)
-    return preparing_data.dummies(df)
+        data[each] = numpy.random.choice(['True', 'False'], n)
+    df = pd.DataFrame(data)
+    temp1 = df[d_bool + ['PROCESSING_ACPS']]
+    temp2 = df[df.columns.difference(d_bool + ['PROCESSING_ACPS'])]
+    temp2 = temp2.fillna(0)
+    for col in temp2.columns:
+        temp2[col] = temp2[col].apply(lambda x: temp2[col].mean() if x < 0 else x)
+    return preparing_data.dummies(pd.concat([temp1, temp2], axis=1))
 
 
 if __name__ == '__main__':
-    d = compound()
-    print(d.columns)
+    path = r'\\storage4\carga\MODELO DINAMICO DE SIMULACAO\Exits_python\JULY'
+    file_name = 'pre_processed_data\\' + path[-4:] + '_x.csv'
+    d = compound(file_name)
+    print(d.head())

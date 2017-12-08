@@ -7,6 +7,7 @@
 5. Test in space of possible parameters the ones with best results (infer from that?)
 # Original database 60.7 GB
 
-TODO: 2. Include other methods
 TODO: 3. Transfer code from Bitbucket to GitHub
 TODO: 4. Write paper and update READ.ME
+TODO: minimally complete review of literature
+

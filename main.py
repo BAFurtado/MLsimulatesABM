@@ -11,8 +11,8 @@ from sklearn.model_selection import train_test_split
 set_printoptions(precision=4)
 
 
-def get_data(pathways, col1, col2):
-    name = 'pre_processed_data\\' + pathways[-4:] + '_x.csv'
+def get_data(pathways, col1, col2, name):
+
     if os.path.exists(name):
         x = pd.read_csv(name, sep=';', index_col=False).drop('Unnamed: 0', axis=1)
         y = pd.read_csv(name.replace('x', 'y'), sep=';', index_col=False)
@@ -25,13 +25,13 @@ def get_data(pathways, col1, col2):
     return train_test_split(x, y['target'], test_size=0.2, random_state=10)
 
 
-def main(x, xt, y, yt):
+def main(x, xt, y, yt, name):
 
     # Running model
     models = machines.run_classifiers(x, xt, y, yt)
 
     # Generating random configuration data to test against optimal results
-    r = generating_random_conf.compound()
+    r = generating_random_conf.compound(name)
     print('Generated dataset summary')
 
     # Predicting results using machine on generated set of random parameters
@@ -56,5 +56,6 @@ if __name__ == "__main__":
     path = r'\\storage4\carga\MODELO DINAMICO DE SIMULACAO\Exits_python\JULY'
     target1 = 'gdp_index'
     target2 = 'gini_index'
-    x_train, x_test, y_train, y_test = get_data(path, target1, target2)
-    main(x_train, x_test, y_train, y_test)
+    file_name = 'pre_processed_data\\' + path[-4:] + '_x.csv'
+    x_train, x_test, y_train, y_test = get_data(path, target1, target2, file_name)
+    main(x_train, x_test, y_train, y_test, file_name)
