@@ -1,0 +1,24 @@
+Loaded!
+Score Tree: 0.8171.
+Confusion Matrix Tree:
+ [[53  8]
+ [ 7 14]].
+Score SVC: 0.8293.
+Confusion Matrix SVC:
+ [[54  7]
+ [ 7 14]].
+Score MPL: 0.8780.
+Confusion Matrix MPL:
+ [[59  2]
+ [ 8 13]].
+Score Voting: 0.8049.
+Confusion Matrix Voting:
+ [[54  7]
+ [ 9 12]].
+Generated dataset summary
+Sum of ones Tree: 1051
+Sum of ones SVC: 21063
+Sum of ones MPL: 41875
+Sum of ones Voting: 12985
+Sum of ones: actual    55
+dtype: int64

@@ -20,9 +20,9 @@ def run_classifiers(x, xt, y, yt):
 
     models = ['Tree', 'SVC', 'MPL', 'Voting']
 
-    m1 = RandomForestClassifier(n_estimators=1000, criterion='gini', bootstrap=True, max_depth=15)
+    m1 = RandomForestClassifier(n_estimators=10000, criterion='gini', bootstrap=True, max_depth=15)
     m3 = SVC(C=1, kernel='poly', degree=3, probability=True)
-    m4 = MLPClassifier(solver='lbfgs', early_stopping=True, activation='tanh', max_iter=200)
+    m4 = MLPClassifier(solver='lbfgs', early_stopping=True, activation='tanh', max_iter=2000)
     voting = VotingClassifier(estimators=[('dt', m1), ('svc', m3), ('neural', m4)],
                               voting='soft')
 
@@ -57,6 +57,6 @@ if __name__ == "__main__":
     import main
     path = r'\\storage4\carga\MODELO DINAMICO DE SIMULACAO\Exits_python\JULY'
     target1 = 'gdp_index'
-    target2 = 'gini_index'
+    target2 = 'unemployment'
     X, XT, Y, YT = main.get_data(path, target1, target2)
     c, e, f, g = run_classifiers(X, XT, Y, YT)

@@ -27,11 +27,11 @@ def pre_process(name):
     return t.describe().T[['mean', 'std']]
 
 
-def compound(name, n=1000):
+def compound(name, n=100000):
     samples = pre_process(name)
     data = dict()
     for each in d_normal:
-        data[each] = numpy.random.normal(samples.loc[each, 'mean'], samples.loc[each, 'std'], n)
+        data[each] = numpy.random.normal(samples.loc[each, 'mean'], samples.loc[each, 'std'] * 2, n)
     data['PROCESSING_ACPS'] = numpy.random.choice(d_acps, n)
     for each in d_bool:
         data[each] = numpy.random.choice(['True', 'False'], n)

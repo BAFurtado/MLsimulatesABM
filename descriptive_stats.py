@@ -2,9 +2,10 @@ import pandas as pd
 pd.options.display.float_format = '{:,.2f}'.format
 
 
-def print_conf_stats(kwargs):
+def print_conf_stats(kwargs, name):
     # Dict contains X and Y as lists in a dictionary for actual and each model
-    name = 'outputs\\output.csv'
+    name = name.split('\\')[1]
+    name = 'outputs\\' + name
     df = pd.DataFrame()
     for key in kwargs.keys():
         temp1 = pd.concat([kwargs[key][0], kwargs[key][1]], axis=1)
