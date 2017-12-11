@@ -27,7 +27,7 @@ def pre_process(name):
     return t.describe().T[['mean', 'std']]
 
 
-def compound(name, n=100000):
+def compound(name, n=10000):
     samples = pre_process(name)
     data = dict()
     for each in d_normal:

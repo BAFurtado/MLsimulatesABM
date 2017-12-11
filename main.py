@@ -46,7 +46,8 @@ def main(x, xt, y, yt, name):
 
     # Output basic descriptive stats
     # Sending over X and Y as lists in a dictionary for actual and each model
-    actual = {'actual': [pd.concat([x, xt], axis=0), pd.concat([y, yt], axis=0).to_frame('actual')]}
+    actual = {'actual': [pd.concat([x, xt], axis=0).reset_index(),
+                         pd.concat([y, yt], axis=0, ignore_index=True).to_frame('actual')]}
     print('Sum of ones: {}'.format(actual['actual'][1].sum()))
     actual.update(results)
     descriptive_stats.print_conf_stats(actual, name)
@@ -58,7 +59,7 @@ if __name__ == "__main__":
                   'average_utility', 'inflation', 'average_qli']
     path = r'\\storage4\carga\MODELO DINAMICO DE SIMULACAO\Exits_python\JULY'
     target1 = 'average_qli'
-    target2 = 'gini_index'
+    target2 = 'inflation'
     file_name = 'pre_processed_data\\' + path[-4:] + '_' + target1 + '_' + target2 + '_x.csv'
 
     with open('outputs\\scores' + '_' + target1 + '_' + target2 + '.txt', 'w') as f:
