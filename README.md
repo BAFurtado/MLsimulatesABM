@@ -18,3 +18,8 @@ Thus, some pre-processed data for some pairs of optimal cases are also made avai
 
 # Running the program
 `python main.py`
+
+Output will be produced at the output folder
+You may change the parameters for the targets at main.py
+Or you may change the parameters of the ML in machines.py
+Or the size of the sample at generating_random_conf.py
