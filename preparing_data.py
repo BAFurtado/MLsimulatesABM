@@ -24,7 +24,7 @@ def json_to_dict(df):
     t = t.drop(['LIST_NEW_AGE_GROUPS', 'TAXES_STRUCTURE', 'SIMPLIFY_POP_EVOLUTION'], axis=1)
     try:
         t = t.drop(['PROCESSING_STATES', 'HIRING_SAMPLE_SIZE'], axis=1)
-    except ValueError:
+    except KeyError:
         pass
     t['PROCESSING_ACPS'] = t['PROCESSING_ACPS'].apply(lambda x: x[0])
     return t
@@ -40,9 +40,12 @@ def read_conf_files(general_path):
 def process_each_file(files_list, cols, y=pd.DataFrame(), x=pd.DataFrame()):
     # Extract both parameters from conf.JSON files and results of that given simulation from 'avg' folder
     for each in files_list:
-        x = x.append(json_to_dict(read_json(each)))
-        # Removing 'conf.json' from path and acessing temp_stats.csv
-        y = y.append(pd.read_csv(each[:-9] + r'\avg\temp_stats.csv', sep=';', header=None))
+        # Removing 'conf.json' from path and accessing temp_stats.csv
+        y_test = pd.read_csv(each[:-9] + r'\avg\temp_stats.csv', sep=';', header=None)
+        # Testing last month of simulation
+        if len(y_test) == 240:
+            y = y.append(y_test)
+            x = x.append(json_to_dict(read_json(each)))
     # Provides names for the columns of results of simulation
     y.columns = cols
     return x, y
@@ -90,6 +93,8 @@ def main(pathway, selected_col1, selected_col2):
     # Target2 set to percentile 20 and less than
     file_list = read_conf_files(pathway)
     data_x, data_y = process_each_file(file_list, cols_names)
+    # redone up to here
+
     first_col = customizing_target(selecting_y(data_y, selected_col1))
     second_col = customizing_target(selecting_y(data_y, selected_col2), 35, operator.lt)
     data_y = averaging_targets(first_col, second_col)
@@ -98,7 +103,7 @@ def main(pathway, selected_col1, selected_col2):
 
 
 if __name__ == "__main__":
-    path = r'\\storage4\carga\MODELO DINAMICO DE SIMULACAO\Exits_python\JULY\sensitivity'
-    target1 = 'gdp_index'
-    target2 = 'gini_index'
+    path = r'\\storage1\carga\MODELO DINAMICO DE SIMULACAO\Exits_python\JULY'
+    target1 = 'average_qli'
+    target2 = 'unemployment'
     main(path, target1, target2)

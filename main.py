@@ -57,9 +57,9 @@ if __name__ == "__main__":
     cols_names = ['months', 'price_index', 'gdp_index', 'gdp_growth', 'unemployment', 'average_workers',
                   'families_wealth', 'families_savings', 'firms_wealth', 'firms_profit', 'gini_index',
                   'average_utility', 'inflation', 'average_qli']
-    path = r'\\storage4\carga\MODELO DINAMICO DE SIMULACAO\Exits_python\JULY'
+    path = r'\\storage1\carga\MODELO DINAMICO DE SIMULACAO\Exits_python\JULY'
     target1 = 'average_qli'
-    target2 = 'inflation'
+    target2 = 'gini_index'
     file_name = 'pre_processed_data\\' + path[-4:] + '_' + target1 + '_' + target2 + '_x.csv'
 
     with open('outputs\\scores' + '_' + target1 + '_' + target2 + '.txt', 'w') as f:
