@@ -18,7 +18,7 @@ def normalize_trial(x, xt):
 
 def run_classifiers(x, xt, y, yt):
 
-    models = ['Tree', 'SVC', 'MPL', 'Voting']
+    models = ['Tree', 'MPL', 'Voting']
 
     m1 = RandomForestClassifier(n_estimators=10000, criterion='gini', bootstrap=True, max_depth=15)
     # m3 = SVC(C=1, kernel='poly', degree=3, probability=True)
