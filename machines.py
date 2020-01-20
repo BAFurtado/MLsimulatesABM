@@ -21,13 +21,13 @@ def run_classifiers(x, xt, y, yt):
     models = ['Tree', 'SVC', 'MPL', 'Voting']
 
     m1 = RandomForestClassifier(n_estimators=10000, criterion='gini', bootstrap=True, max_depth=15)
-    m3 = SVC(C=1, kernel='poly', degree=3, probability=True)
+    # m3 = SVC(C=1, kernel='poly', degree=3, probability=True)
     m4 = MLPClassifier(solver='lbfgs', early_stopping=True, activation='tanh', max_iter=2000)
-    voting = VotingClassifier(estimators=[('dt', m1), ('svc', m3), ('neural', m4)],
+    voting = VotingClassifier(estimators=[('dt', m1), ('neural', m4)],
                               voting='soft')
 
     # Fitting models
-    cls = [m1, m3, m4, voting]
+    cls = [m1, m4, voting]
     for each in cls:
         each.fit(x, y)
 

@@ -1,22 +1,29 @@
-from keras.layers import Dense, Flatten, LSTM, Activation
-from keras.layers import Dropout, RepeatVector, TimeDistributed
-from keras import Input, Model
+import numpy as np
+import pandas as pd
+from keras import Sequential
+from keras.layers import LSTM, Lambda, Dense
 
-from keras.layers import Dense, Flatten, LSTM, Activation
-from keras.layers import Dropout, RepeatVector, TimeDistributed
-from keras import Input, Model
+timesteps = 1
+x = pd.read_csv('pre_processed_data/data_x.csv', sep=';')
+x = np.reshape(np.array(x), (x.shape[0], timesteps, x.shape[1]))
+y = pd.read_csv('pre_processed_data/data_y.csv', sep=';')
 
-seq_length = 15
-input_dims = 46
-output_dims = 2 # number of classes
-n_hidden = 10
-model1_inputs = Input(shape=(seq_length,input_dims,))
-model1_outputs = Input(shape=(output_dims,))
 
-net1 = LSTM(n_hidden, return_sequences=True)(model1_inputs)
-net1 = LSTM(n_hidden, return_sequences=False)(net1)
-net1 = Dense(output_dims, activation='relu')(net1)
-model1_outputs = net1
+N_INPUTS = 286
+N_FEATURES = 70
+N_BLOCKS = 286
+N_OUTPUTS = 13
+model = Sequential()
 
-model1 = Model(inputs=model1_inputs, outputs=model1_outputs, name='model1')
+model.add(LSTM(N_BLOCKS, input_shape=(N_INPUTS, N_FEATURES)))
+model.add(Dense(N_OUTPUTS))
+# model.add(LSTM(1, input_shape=(timesteps, data_dim), return_sequences=True))
+# model.add(Lambda(lambda x: x[:, -N:, :]))
 
+model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+#
+# # fit the keras model on the dataset
+model.fit(x, y, epochs=150, batch_size=10)
+#
+# _, accuracy = model.evaluate(x, y)
+# print('Accuracy: %.2f' % (accuracy * 100))

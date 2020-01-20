@@ -24,9 +24,14 @@ def json_to_dict(df):
     t = t.drop(['LIST_NEW_AGE_GROUPS', 'TAXES_STRUCTURE', 'SIMPLIFY_POP_EVOLUTION'], axis=1)
     try:
         t = t.drop(['PROCESSING_STATES', 'HIRING_SAMPLE_SIZE'], axis=1)
-    except KeyError:
+    except:
         pass
     t['PROCESSING_ACPS'] = t['PROCESSING_ACPS'].apply(lambda x: x[0])
+    # Spelling bug
+    try:
+        t = t.drop('HOUSE_VANCANCY', axis=1)
+    except:
+        pass
     return t
 
 
@@ -51,9 +56,13 @@ def process_each_file(files_list, cols, y=pd.DataFrame(), x=pd.DataFrame()):
     return x, y
 
 
+def last_month(df):
+    return df[df.months == 239].drop('months', axis=1)
+
+
 def selecting_y(df, col):
     # Selects only results from last month of simulation
-    return df[df['months'] == 239][col]
+    return df[col]
 
 
 def customizing_target(base, percentile=65, op=operator.gt):
@@ -76,13 +85,13 @@ def dummies(data):
     cat = data[cat]
     try:
         cat = cat.drop(['PROCESSING_STATES'], axis=1)
-    except ValueError:
+    except:
         pass
     cat = pd.get_dummies(cat)
     num = data[num]
     try:
         num = num.drop(['HIRING_SAMPLE_SIZE'], axis=1)
-    except ValueError:
+    except:
         pass
     return pd.concat([num, cat], axis=1)
 
@@ -93,12 +102,19 @@ def main(pathway, selected_col1, selected_col2):
     # Target2 set to percentile 20 and less than
     file_list = read_conf_files(pathway)
     data_x, data_y = process_each_file(file_list, cols_names)
-    # redone up to here
+    # Getting last months' data
+    data_y = last_month(data_y)
+
+    # Excluding the binary operation on target and keeping all values
 
     first_col = customizing_target(selecting_y(data_y, selected_col1))
     second_col = customizing_target(selecting_y(data_y, selected_col2), 35, operator.lt)
     data_y = averaging_targets(first_col, second_col)
+
     data_x = dummies(data_x)
+    name = 'pre_processed_data\\' + pathway[-4:] + '_' + selected_col1 + '_' + selected_col2 + '_x.csv'
+    data_x.to_csv(name, index=False, sep=';')
+    data_y.to_csv(name.replace('x.csv', 'y.csv'), index=False, sep=';')
     return data_x, data_y
 
 
@@ -106,4 +122,5 @@ if __name__ == "__main__":
     path = r'\\storage1\carga\MODELO DINAMICO DE SIMULACAO\Exits_python\JULY'
     target1 = 'average_qli'
     target2 = 'unemployment'
-    main(path, target1, target2)
+
+    x, y = main(path, target1, target2)

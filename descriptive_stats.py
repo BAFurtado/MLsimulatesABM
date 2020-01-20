@@ -3,7 +3,7 @@ pd.options.display.float_format = '{:,.2f}'.format
 
 
 def print_conf_stats(kwargs, name):
-    # Dict contains X and Y as lists in a dictionary for actual and each model
+    # Dict contains X and Y as lists in a dictionary for current and each model
     name = name.split('\\')[1]
     name = 'outputs\\' + name
     df = pd.DataFrame()
