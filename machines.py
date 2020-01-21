@@ -55,8 +55,9 @@ def fit(model, a, b):
 
 if __name__ == "__main__":
     import main
-    path = r'\\storage4\carga\MODELO DINAMICO DE SIMULACAO\Exits_python\JULY'
+    path = r'\\storage1\carga\MODELO DINAMICO DE SIMULACAO\Exits_python\JULY'
     target1 = 'gdp_index'
     target2 = 'unemployment'
-    X, XT, Y, YT = main.get_data(path, target1, target2)
+    file_name = 'pre_processed_data\\' + path[-4:] + '_' + target1 + '_' + target2 + '_x.csv'
+    X, XT, Y, YT = main.get_data(path, target1, target2, file_name)
     c, e, f, g = run_classifiers(X, XT, Y, YT)
