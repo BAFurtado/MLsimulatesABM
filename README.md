@@ -1,7 +1,7 @@
 # Machine Learning simulates Agent-based Model
 
 This is an initial exploratory exercise done for the class @ http://thiagomarzagao.com/teaching/ipea/
-Text available here: arxiv.org/
+Text available here: https://arxiv.org/abs/1712.04429v1
 
 The program:
 
